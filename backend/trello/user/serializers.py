@@ -17,6 +17,11 @@ class TrelloUserAuthSerializer(serializers.ModelSerializer):
         model = TrelloUser
         fields = ['email', 'username', 'password']
 
+class TrelloUserLogInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrelloUser
+        fields = ['username', 'password']
+
 
 class TrelloAuthSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()

@@ -10,15 +10,16 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import TrelloUser
 from .serializers import TrelloUserSerializer, TrelloUserAuthSerializer, TrelloUserAuthResponseSerializer, \
-    TrelloUserResponseSerializer
+    TrelloUserResponseSerializer,TrelloUserLogInSerializer
 from dto_utils.response import BaseResponseDTO
 from dto_utils.serilizer import ResponseDtoSerializer
 
 
 # Create your views here.
 
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):
     queryset = TrelloUser.objects.all()
+    serializer_class = TrelloUserLogInSerializer
 
     def post(self, request):
         username = request.data.get('username')

@@ -11,7 +11,7 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         read_only_fields = ['created_at', 'updated_at', 'id', 'workspace', 'assignee']
         fields = ['id', 'title', 'workspace', 'assignee', 'created_at', 'updated_at', 'description',
-                  'estimated_time', 'actual_time', 'due_time', 'priority', 'status', 'image_url']
+                  'estimated_time', 'actual_time', 'due_date', 'priority', 'status', 'image_url']
 
     def is_valid(self, *, raise_exception=False, **kwargs):
         assert hasattr(self, 'initial_data'), (
