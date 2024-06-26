@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'workspace',
     'role',
     'task',
+    'subtask',
     'rest_framework_simplejwt',
 ]
 

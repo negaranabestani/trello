@@ -23,4 +23,5 @@ urlpatterns = [
     path('trello/', include('workspace.urls')),
     path('trello/', include('role.urls')),
     path('trello/', include('task.urls')),
+    path('trello/', include('subtask.urls')),
 ]
