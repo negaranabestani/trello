@@ -73,8 +73,5 @@ class TrelloUser(AbstractUser):
     objects = TrelloUserManager()
 
     def __str__(self):
-        field_values = []
-        # for field in self.meta.get_all_field_names():
-        #     field_values.append(getattr(self, field, ''))
-        # return ' '.join(field_values)
+
         return "{" + f"{self.get_username()},{self.email},{self.created_at},{self.updated_at}" + "}"

@@ -1,23 +1,19 @@
-import traceback
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import raise_errors_on_nested_writes
-from rest_framework.utils import model_meta
 
 from dto_utils.response import BaseResponseDTO
 from dto_utils.serilizer import ResponseDtoSerializer
-from .models import Role
+from .models import Task
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Role
-        read_only_fields = ['created_at', 'updated_at', 'id']
-        fields = ['id', 'role', 'workspace', 'user', 'created_at', 'updated_at']
+        model = Task
+        read_only_fields = ['created_at', 'updated_at', 'id', 'workspace', 'assignee']
+        fields = ['id', 'title', 'workspace', 'assignee', 'created_at', 'updated_at', 'description',
+                  'estimated_time', 'actual_time', 'due_time', 'priority', 'status', 'image_url']
 
-    def is_valid(self, *, raise_exception=False,**kwargs):
-        print(kwargs)
+    def is_valid(self, *, raise_exception=False, **kwargs):
         assert hasattr(self, 'initial_data'), (
             'Cannot call `.is_valid()` as no `data=` keyword argument was '
             'passed when instantiating the serializer instance.'
@@ -40,11 +36,11 @@ class RoleSerializer(serializers.ModelSerializer):
         return not bool(self._errors)
 
 
-class RoleResponseSerializer:
-    def __init__(self, roles, message):
-        self.roles = roles
+class TaskResponseSerializer:
+    def __init__(self, tasks, message):
+        self.tasks = tasks
         self.response = ResponseDtoSerializer(BaseResponseDTO(message)).data
 
     @property
     def data(self):
-        return {"response": self.response, "roles": self.roles}
+        return {"response": self.response, "tasks": self.tasks}

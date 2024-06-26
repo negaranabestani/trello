@@ -29,15 +29,14 @@ class CreateRoleOrWorkspaceListUsers(generics.ListAPIView, generics.CreateAPIVie
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
+        serializer.is_valid(kwargs=kwargs,raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         response = RoleResponseSerializer(serializer.data, "successful").data
         return Response(response, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class RoleUpdateDelete(generics.RetrieveAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class RoleUpdateDelete(generics.UpdateAPIView, generics.DestroyAPIView):
     # API endpoint that returns a single customer by pk.
     serializer_class = RoleSerializer
     lookup_field = 'user'
