@@ -85,8 +85,8 @@ DATABASES = {
         'NAME': 'postgres',  # change it databasename
         'USER': 'postgres',  # change it database user name
         'PASSWORD': 'postgres',  # change user database password
-        'HOST': 'localhost',
-        'PORT': '5433',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 # Password validation
