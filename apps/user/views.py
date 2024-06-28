@@ -25,6 +25,10 @@ class UserViewSet(BaseViewSet):
     def profile(self, request, *args, **kwargs):
         return Response(UserSerializer(self.get_object()).data)
 
+    @action(methods=["GET"], detail=True, url_path="me")
+    def me(self, request, *args, **kwargs):
+        return Response(UserSerializer(self.request.user).data)
+
 
 class UserRegistration(APIView):
     permission_classes = [AllowAny]
