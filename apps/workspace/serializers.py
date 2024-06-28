@@ -7,8 +7,8 @@ from .models import Workspace
 class WorkspaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workspace
-        read_only_fields = ['created_at', 'updated_at', 'id']
-        fields = ['id', 'name', 'description', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = "__all__"
 
 
 class WorkspaceResponseSerializer:

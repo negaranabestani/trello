@@ -1,7 +1,8 @@
-from django.urls import path
-from .views import RoleUpdateDelete, CreateRoleOrWorkspaceListUsers
+from rest_framework.routers import SimpleRouter
 
-urlpatterns = [
-    path('workspaces/<int:workspace>/users', CreateRoleOrWorkspaceListUsers.as_view(), name='create-list-role'),
-    path('workspaces/<int:workspace>/users/<int:user>', RoleUpdateDelete.as_view()),
-]
+from .views import UserWorkspaceRoleViewSet
+
+router = SimpleRouter()
+router.register(r"workspaces/<int:workspace>/users", UserWorkspaceRoleViewSet)
+
+urlpatterns = router.urls
