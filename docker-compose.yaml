@@ -3,9 +3,8 @@ services:
   trello:
 #    image: negaranabestani/trello
     image: trello
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    build: .
     ports:
       - '8000:8000'
   db:
