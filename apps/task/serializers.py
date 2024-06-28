@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
 from core.exceptios import TrelloException
+from core.serializers import Base64ImageField
 from role.models import UserWorkspaceRole
 from .models import Task, SubTask
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    image_url = Base64ImageField(max_length=None, use_url=True, allow_null=True)
+
     class Meta:
         model = Task
         read_only_fields = ['id', 'created_at', 'updated_at']
