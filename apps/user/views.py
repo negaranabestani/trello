@@ -23,9 +23,15 @@ class UserViewSet(BaseViewSet):
 
     @action(methods=["GET", "PUT"], detail=True, url_path="profile")
     def profile(self, request, *args, **kwargs):
-        return Response(UserSerializer(self.get_object()).data)
+        if request.method == "GET":
+            return Response(UserSerializer(self.get_object()).data)
+        elif request.method == "PUT":
+            serializer = UserSerializer(instance=self.get_object(), data=request.data, context={"request": request})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
 
-    @action(methods=["GET"], detail=True, url_path="me")
+    @action(methods=["GET"], detail=False, url_path="me")
     def me(self, request, *args, **kwargs):
         return Response(UserSerializer(self.request.user).data)
 
