@@ -21,7 +21,7 @@ class UserWorkspaceRoleViewSet(BaseViewSet):
         # check user permission to access that workspace and to be the Admin
         super(UserWorkspaceRoleViewSet, self).check_permissions(request)
         if not UserWorkspaceRole.objects.filter(workspace_id=self.kwargs["workspace"], user_id=self.request.user.id, role="Admin").exists():
-            raise TrelloException("شما به این ورک اسپیس دسترسی ندارید.", 403)
+            raise TrelloException("شما دسترسی کافی برای ایجاد تغییرات در این ورک اسپیس را ندارید.", 403)
 
         request.data["workspace"] = self.kwargs["workspace"]
         if request.method in ["PUT", "PATCH", "DELETE"]:
