@@ -6,7 +6,7 @@ class Role(models.Model):
     name = models.CharField(max_length=64)
 
     # fk
-    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE)
+    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE, related_name="roles")
 
     # m2m
     permissions = models.ManyToManyField("auth.Permission")
@@ -21,10 +21,13 @@ class Role(models.Model):
 
 class UserWorkspaceRole(models.Model):
     # fk
-    user = models.ForeignKey("user.User", on_delete=models.PROTECT)
-    role = models.ForeignKey("role.Role", on_delete=models.PROTECT)
-    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.PROTECT)
+    user = models.ForeignKey("user.User", on_delete=models.CASCADE, related_name="user_workspace_roles")
+    role = models.CharField(max_length=128)
+    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE, related_name="user_workspace_roles")
 
     # log
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("user", "workspace"), )

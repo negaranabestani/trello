@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from dto_utils.response import BaseResponseDTO
-from dto_utils.serilizer import ResponseDtoSerializer
+
+from core.exceptios import TrelloException
+from role.serializers import UserWorkspaceRoleSerializer
 from .models import Workspace
 
 
@@ -10,12 +11,25 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
         fields = "__all__"
 
+    def create(self, validated_data):
+        instance = super(WorkspaceSerializer, self).create(validated_data)
 
-class WorkspaceResponseSerializer:
-    def __init__(self, workspaces, message):
-        self.workspaces = workspaces
-        self.response = ResponseDtoSerializer(BaseResponseDTO(message)).data
+        uwrs = UserWorkspaceRoleSerializer(data={
+            "user": self.context["request"].user.id,
+            "workspace": instance.id,
+            "role": "Admin"
+        })
 
-    @property
-    def data(self):
-        return {"response": self.response, "workspaces": self.workspaces}
+        uwrs.is_valid(raise_exception=True)
+        uwrs.save()
+
+        return instance
+
+    def is_valid(self, raise_exception=False):
+        if not self.initial_data.get("name", None):
+            raise TrelloException("نام اجباری است.")
+
+        if len(self.initial_data.get("name")) < 6:
+            raise TrelloException("نام باید حداقل ۶ کاراکتر باشد.")
+
+        super(WorkspaceSerializer, self).is_valid(raise_exception=raise_exception)

@@ -24,7 +24,7 @@ class Task(models.Model):
     # fields
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=60, blank=True, null=True)
-    status = models.CharField(max_length=16, choices=STATUSES)
+    status = models.CharField(max_length=16, choices=STATUSES, default=PLANNED)
     estimated_time = models.TimeField(null=True, blank=True)
     actual_time = models.TimeField(null=True, blank=True)
     priority = models.CharField(max_length=8, choices=Priorities, null=True, blank=True)
@@ -32,8 +32,8 @@ class Task(models.Model):
     image_url = models.ImageField(null=True, blank=True)
 
     # fk
-    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE)
-    assignee = models.ForeignKey("user.User", on_delete=models.SET_NULL, null=True, blank=True)
+    workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE, related_name="tasks")
+    assignee = models.ForeignKey("user.User", on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
 
     # log
     created_at = models.DateTimeField(auto_now_add=True)
@@ -49,8 +49,8 @@ class SubTask(models.Model):
     is_completed = models.BooleanField(default=False)
 
     # fk
-    task = models.ForeignKey("task.Task", on_delete=models.CASCADE)
-    assignee = models.ForeignKey("user.User", on_delete=models.SET_NULL, null=True, blank=True)
+    task = models.ForeignKey("task.Task", on_delete=models.CASCADE, related_name="sub_tasks")
+    assignee = models.ForeignKey("user.User", on_delete=models.SET_NULL, null=True, blank=True, related_name="sub_tasks")
 
     # log
     created_at = models.DateTimeField(auto_now_add=True)
