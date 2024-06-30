@@ -77,6 +77,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    task = TaskSerializer()
+
     class Meta:
         model = Notification
         read_only_fields = ['id', 'created_at', 'updated_at']

@@ -81,6 +81,7 @@ class Notification(models.Model):
 
     # fk
     receiver = models.ForeignKey("user.User", on_delete=models.CASCADE, related_name="notifications")
+    task = models.ForeignKey("task.Task", on_delete=models.CASCADE, related_name="notifications")
 
     # log
     created_at = models.DateTimeField(auto_now_add=True)
