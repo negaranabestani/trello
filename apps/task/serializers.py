@@ -24,25 +24,24 @@ class TaskSerializer(serializers.ModelSerializer):
         super(TaskSerializer, self).is_valid(raise_exception=raise_exception)
 
     def create(self, validated_data):
-        instance: Task = super(TaskSerializer, self).create(validated_data)
+        if validated_data.get("assignee"):
+            validated_data["subscribers"] = [validated_data.get("assignee")]
 
-        if instance.assignee_id:
-            instance.subscribers.append(instance.assignee_id)
-            instance.save()
+        instance: Task = super(TaskSerializer, self).create(validated_data)
 
         return instance
 
     def update(self, instance: Task, validated_data):
         current_assignee = instance.assignee_id
+        new_assignee = validated_data.get("assignee")
+
+        if current_assignee and current_assignee in instance.subscribers:
+            instance.subscribers.remove(current_assignee)
+
+        if new_assignee and new_assignee not in instance.subscribers:
+            instance.subscribers.append(new_assignee)
 
         instance = super(TaskSerializer, self).update(instance, validated_data)
-
-        if current_assignee != instance.assignee_id:
-            if current_assignee and current_assignee in instance.subscribers:
-                instance.subscribers.remove(current_assignee)
-
-            if instance.assignee_id and instance.assignee_id not in instance.subscribers:
-                instance.subscribers.append(instance.assignee_id)
 
         return instance
 

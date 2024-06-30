@@ -72,3 +72,16 @@ class Comment(models.Model):
     # log
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Notification(models.Model):
+    # fields
+    title = models.CharField(max_length=512)
+    seen = models.BooleanField(default=False)
+
+    # fk
+    receiver = models.ForeignKey("user.User", on_delete=models.CASCADE, related_name="notifications")
+
+    # log
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
