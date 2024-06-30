@@ -30,6 +30,7 @@ class Task(models.Model):
     priority = models.CharField(max_length=8, choices=Priorities, null=True, blank=True)
     due_date = models.DateField(null=True, blank=True)
     image_url = models.ImageField(null=True, blank=True)
+    subscribers = models.JSONField(default=list)
 
     # fk
     workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE, related_name="tasks")
@@ -65,8 +66,8 @@ class Comment(models.Model):
     content = models.TextField()
 
     # fk
-    task = models.ForeignKey("task.Task", on_delete=models.CASCADE)
-    user = models.ForeignKey("task.Task", on_delete=models.SET_NULL, null=True, blank=True)
+    task = models.ForeignKey("task.Task", on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey("user.User", on_delete=models.SET_NULL, null=True, blank=True, related_name="comments")
 
     # log
     created_at = models.DateTimeField(auto_now_add=True)

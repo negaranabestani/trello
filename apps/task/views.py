@@ -1,3 +1,6 @@
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from core.exceptios import TrelloException
 from core.viewsets import BaseViewSet
 from role.models import UserWorkspaceRole
@@ -20,6 +23,14 @@ class TaskViewSet(BaseViewSet):
     def get_queryset(self):
         # filtering tasks based on workspace
         return Task.objects.filter(workspace_id=self.kwargs["workspace"])
+
+    @action(methods=["POST"], detail=True, url_path="watch")
+    def watch(self, request, *args, **kwargs):
+        task: Task = self.get_object()
+        if self.request.user.id not in task.subscribers:
+            task.subscribers.append(self.request.user.id)
+            task.save()
+        return Response({"status": "OK"})
 
 
 class SubTaskViewSet(BaseViewSet):
