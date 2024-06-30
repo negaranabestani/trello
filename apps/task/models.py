@@ -25,10 +25,10 @@ class Task(models.Model):
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=60, blank=True, null=True)
     status = models.CharField(max_length=16, choices=STATUSES, default=PLANNED)
-    estimated_time = models.TimeField(null=True, blank=True)
+    estimated_time = models.PositiveSmallIntegerField(null=True, blank=True)
     actual_time = models.TimeField(null=True, blank=True)
     priority = models.CharField(max_length=8, choices=Priorities, null=True, blank=True)
-    due_date = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
     image_url = models.ImageField(null=True, blank=True)
 
     # fk
