@@ -29,7 +29,7 @@ class UserWorkspaceRoleViewSet(BaseViewSet):
 
     def get_queryset(self):
         # filtering tasks based on workspace
-        return UserWorkspaceRole.objects.filter(workspace_id=self.kwargs["workspace"])
+        return UserWorkspaceRole.objects.filter(workspace_id=self.kwargs.get("workspace", -1))
 
     def get_object(self):
         return get_object_or_404(self.get_queryset(), user_id=self.kwargs["pk"])

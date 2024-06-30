@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,6 +14,8 @@ class TaskViewSet(BaseViewSet):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
     pagination_class = TrelloPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['assignee']
 
     def check_permissions(self, request):
         # check user permission to access that workspace
@@ -24,7 +27,7 @@ class TaskViewSet(BaseViewSet):
 
     def get_queryset(self):
         # filtering tasks based on workspace
-        return Task.objects.filter(workspace_id=self.kwargs["workspace"])
+        return Task.objects.filter(workspace_id=self.kwargs.get("workspace", -1))
 
     @action(methods=["POST"], detail=True, url_path="watch")
     def watch(self, request, *args, **kwargs):
@@ -54,7 +57,7 @@ class SubTaskViewSet(BaseViewSet):
 
     def get_queryset(self):
         # filtering tasks based on workspace
-        return SubTask.objects.filter(task_id=self.kwargs["task"])
+        return SubTask.objects.filter(task_id=self.kwargs.get("task", -1))
 
 
 class CommentViewSet(BaseViewSet):
@@ -76,7 +79,7 @@ class CommentViewSet(BaseViewSet):
 
     def get_queryset(self):
         # filtering tasks based on workspace
-        return Comment.objects.filter(task_id=self.kwargs["task"])
+        return Comment.objects.filter(task_id=self.kwargs.get("task", -1))
 
 
 class NotificationViewSet(BaseViewSet):
