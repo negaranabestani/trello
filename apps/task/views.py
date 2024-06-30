@@ -2,6 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.exceptios import TrelloException
+from core.pagination import TrelloPagination
 from core.viewsets import BaseViewSet
 from role.models import UserWorkspaceRole
 from .models import Task, SubTask, Comment, Notification
@@ -11,6 +12,7 @@ from .serializers import TaskSerializer, SubTaskSerializer, CommentSerializer, N
 class TaskViewSet(BaseViewSet):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
+    pagination_class = TrelloPagination
 
     def check_permissions(self, request):
         # check user permission to access that workspace
