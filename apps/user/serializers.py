@@ -6,7 +6,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(max_length=None, use_url=True, allow_null=True)
+    image = Base64ImageField(max_length=None, use_url=True, allow_null=True,required=False)
 
     class Meta:
         model = User

@@ -2,7 +2,7 @@ version: '3.8'
 services:
   trello:
     #    image: negaranabestani/trello
-    image: trello
+#    image: trello
     command: python manage.py runserver 0.0.0.0:8000
     build: .
     ports:
