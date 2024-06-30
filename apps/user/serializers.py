@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from core.exceptios import TrelloException
+from core.serializers import Base64ImageField
 from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length=None, use_url=True, allow_null=True)
+
     class Meta:
         model = User
         read_only_fields = ['created_at', 'updated_at', 'id']

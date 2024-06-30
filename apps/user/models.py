@@ -5,6 +5,7 @@ from django.db import models
 class User(AbstractUser):
     email = models.EmailField(unique=True)
 
+    image = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
