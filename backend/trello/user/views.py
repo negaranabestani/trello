@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import TrelloUser
 from .serializers import TrelloUserSerializer, TrelloUserAuthSerializer, TrelloUserAuthResponseSerializer, \
-    TrelloUserResponseSerializer,TrelloUserLogInSerializer
+    TrelloUserResponseSerializer, TrelloUserLogInSerializer
 from dto_utils.response import BaseResponseDTO
 from dto_utils.serilizer import ResponseDtoSerializer
 
@@ -50,6 +50,9 @@ class TrelloUserCreate(generics.CreateAPIView):
             access = str(refresh.access_token)
             response = TrelloUserAuthResponseSerializer(str(refresh), access, user, "successful").data
             return Response(data=response, status=200)
+        response = ResponseDtoSerializer(
+            BaseResponseDTO(f"unsuccessful,request: {data},error:{serializer._errors}")).data
+        return Response(data=response, status=200)
 
 
 class TrelloUserList(generics.ListAPIView):
@@ -79,16 +82,19 @@ class TrelloUserDetailUpdateDelete(generics.RetrieveAPIView, generics.UpdateAPIV
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        if serializer.is_valid():
+            self.perform_update(serializer)
 
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
+            if getattr(instance, '_prefetched_objects_cache', None):
+                # If 'prefetch_related' has been applied to a queryset, we need to
+                # forcibly invalidate the prefetch cache on the instance.
+                instance._prefetched_objects_cache = {}
 
-        response = TrelloUserResponseSerializer(serializer.data, "successful").data
-        return Response(data=response, status=status.HTTP_200_OK)
+            response = TrelloUserResponseSerializer(serializer.data, "successful").data
+            return Response(data=response, status=status.HTTP_200_OK)
+        response = ResponseDtoSerializer(
+            BaseResponseDTO(f"unsuccessful,request: {request.data},error:{serializer._errors}")).data
+        return Response(data=response, status=200)
 
     def destroy(self, request, *args, **kwargs):
         print('delete')

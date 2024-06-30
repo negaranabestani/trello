@@ -1,11 +1,11 @@
 version: '3.8'
 services:
   trello:
-#    image: negaranabestani/trello
-    image: trello
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: negaranabestani/trello
+#    image: trello
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
     ports:
       - '8000:8000'
   db:
@@ -14,8 +14,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-#    ports:
-#      - '5433:5432'
+    ports:
+      - '5433:5432'
     volumes:
       - db:/var/lib/postgresql/data
 volumes:

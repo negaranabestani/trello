@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'subtask',
     'rest_framework_simplejwt',
     'rest_framework_swagger',
-    'drf_yasg'
+    'drf_yasg',
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'trello.urls'
@@ -75,6 +78,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'trello.wsgi.application'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+]
+
+CORS_ALLOW_CREDENTIALS = False
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
