@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+from django.db import transaction
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -17,7 +18,8 @@ class BaseViewSet(ModelViewSet):
         super(BaseViewSet, self).permission_denied(request, message=None, code=None)
 
     def dispatch(self, request, *args, **kwargs):
-        response = super(BaseViewSet, self).dispatch(request, *args, **kwargs)
+        with transaction.atomic():
+            response = super(BaseViewSet, self).dispatch(request, *args, **kwargs)
         if str(response.status_code).startswith("2"):
             response.data = {
                 "request_id": uuid.uuid4(),

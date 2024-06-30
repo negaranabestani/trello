@@ -3,7 +3,7 @@ from rest_framework import serializers
 from core.exceptios import TrelloException
 from core.serializers import Base64ImageField
 from role.models import UserWorkspaceRole
-from .models import Task, SubTask, Comment
+from .models import Task, SubTask, Comment, Notification
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -74,3 +74,10 @@ class CommentSerializer(serializers.ModelSerializer):
             raise TrelloException("متن نمیتواند خالی باشد.")
 
         super(CommentSerializer, self).is_valid(raise_exception=raise_exception)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        read_only_fields = ['id', 'created_at', 'updated_at']
+        exclude = ["receiver"]

@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from core.exceptios import TrelloException
 from core.viewsets import BaseViewSet
 from role.models import UserWorkspaceRole
-from .models import Task, SubTask, Comment
-from .serializers import TaskSerializer, SubTaskSerializer, CommentSerializer
+from .models import Task, SubTask, Comment, Notification
+from .serializers import TaskSerializer, SubTaskSerializer, CommentSerializer, NotificationSerializer
 
 
 class TaskViewSet(BaseViewSet):
@@ -75,3 +75,28 @@ class CommentViewSet(BaseViewSet):
     def get_queryset(self):
         # filtering tasks based on workspace
         return Comment.objects.filter(task_id=self.kwargs["task"])
+
+
+class NotificationViewSet(BaseViewSet):
+    serializer_class = NotificationSerializer
+    queryset = Notification.objects.all()
+
+    def get_queryset(self):
+        # filtering tasks based on workspace
+        return Notification.objects.filter(receiver_id=self.request.user.id)
+
+    def create(self, request, *args, **kwargs):
+        raise TrelloException("You can't create a notification.", 403)
+
+    def update(self, request, *args, **kwargs):
+        raise TrelloException("You can't update a notification.", 403)
+
+    def destroy(self, request, *args, **kwargs):
+        raise TrelloException("You can't remove a notification.", 403)
+
+    @action(methods=["POST"], detail=True, url_path="seen")
+    def seen(self, request, *args, **kwargs):
+        instance: Notification = self.get_object()
+        instance.seen = True
+        instance.save()
+        return instance

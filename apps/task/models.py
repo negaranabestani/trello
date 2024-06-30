@@ -30,7 +30,7 @@ class Task(models.Model):
     priority = models.CharField(max_length=8, choices=Priorities, null=True, blank=True)
     due_date = models.DateField(null=True, blank=True)
     image_url = models.ImageField(null=True, blank=True)
-    subscribers = models.JSONField(default=list)
+    subscribers = models.JSONField(default=list, blank=True)
 
     # fk
     workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE, related_name="tasks")

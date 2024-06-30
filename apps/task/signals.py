@@ -1,6 +1,11 @@
+import json
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.db.models.signals import post_save
 
 from task.models import Task, Notification
+from task.serializers import NotificationSerializer
 
 
 def handle_notification(sender, instance: Task, created, **kwargs):
@@ -17,4 +22,18 @@ def handle_notification(sender, instance: Task, created, **kwargs):
             )
 
 
-post_save.connect(Task, handle_notification, dispatch_uid="creat_notification")
+def send_notification(sender, instance: Notification, created, **kwargs):
+    if created:
+        serializer = NotificationSerializer(instance=instance)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'user_{instance.receiver_id}',
+            {
+                'type': 'send_message',
+                'message': json.dumps(serializer.data)
+            }
+        )
+
+
+post_save.connect(handle_notification, sender=Task, dispatch_uid="create_notification")
+post_save.connect(send_notification, sender=Notification, dispatch_uid="send_notification")
