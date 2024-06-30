@@ -3,7 +3,7 @@ from rest_framework import serializers
 from core.exceptios import TrelloException
 from core.serializers import Base64ImageField
 from role.models import UserWorkspaceRole
-from .models import Task, SubTask
+from .models import Task, SubTask, Comment
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -39,3 +39,16 @@ class SubTaskSerializer(serializers.ModelSerializer):
             raise TrelloException("ابتدا کاربر را به ورک اسپیس اضافه کنید.")
 
         super(SubTaskSerializer, self).is_valid(raise_exception=raise_exception)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = "__all__"
+
+    def is_valid(self, raise_exception=False):
+        if not self.initial_data.get("content", None):
+            raise TrelloException("متن نمیتواند خالی باشد.")
+
+        super(CommentSerializer, self).is_valid(raise_exception=raise_exception)

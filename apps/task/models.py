@@ -58,3 +58,16 @@ class SubTask(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.title} | {self.task.title} | {self.assignee.name if self.assignee_id else ''}"
+
+
+class Comment(models.Model):
+    # fields
+    content = models.TextField()
+
+    # fk
+    task = models.ForeignKey("task.Task", on_delete=models.CASCADE)
+    user = models.ForeignKey("task.Task", on_delete=models.SET_NULL, null=True, blank=True)
+
+    # log
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
