@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 from core.viewsets import BaseViewSet
 from .models import User
 
-
 # Create your views here.
 from .serializers import UserSerializer
 
@@ -43,5 +42,8 @@ class UserRegistration(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user = serializer.save()
+        user.is_active = True
+        user.set_password(request.data.get("password"))
+        user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
