@@ -11,7 +11,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'subscribers', 'created_at', 'updated_at']
         fields = "__all__"
 
     def is_valid(self, raise_exception=False):
@@ -25,7 +25,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if validated_data.get("assignee"):
-            validated_data["subscribers"] = [validated_data.get("assignee")]
+            validated_data["subscribers"] = [validated_data.get("assignee").id]
 
         instance: Task = super(TaskSerializer, self).create(validated_data)
 
