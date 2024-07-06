@@ -37,6 +37,14 @@ class TaskViewSet(BaseViewSet):
             task.save()
         return Response({"status": "OK"})
 
+    @action(methods=["POST"], detail=True, url_path="unwatch")
+    def unwatch(self, request, *args, **kwargs):
+        task: Task = self.get_object()
+        if self.request.user.id in task.subscribers:
+            task.subscribers.remove(self.request.user.id)
+            task.save()
+        return Response({"status": "OK"})
+
 
 class SubTaskViewSet(BaseViewSet):
     serializer_class = SubTaskSerializer
