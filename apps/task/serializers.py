@@ -33,13 +33,13 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Task, validated_data):
         current_assignee = instance.assignee_id
-        new_assignee = validated_data.get("assignee").id
+        new_assignee = validated_data.get("assignee")
 
         if current_assignee and current_assignee in instance.subscribers:
             instance.subscribers.remove(current_assignee)
 
-        if new_assignee and new_assignee not in instance.subscribers:
-            instance.subscribers.append(new_assignee)
+        if new_assignee and new_assignee.id not in instance.subscribers:
+            instance.subscribers.append(new_assignee.id)
 
         instance = super(TaskSerializer, self).update(instance, validated_data)
 
