@@ -33,7 +33,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Task, validated_data):
         current_assignee = instance.assignee_id
-        new_assignee = validated_data.get("assignee")
+        new_assignee = validated_data.get("assignee").id
 
         if current_assignee and current_assignee in instance.subscribers:
             instance.subscribers.remove(current_assignee)
